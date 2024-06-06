@@ -1,4 +1,4 @@
-/// Copyright (c) 2024 Razeware LLC
+/// Copyright (c) 2021 Razeware LLC
 /// 
 /// Permission is hereby granted, free of charge, to any person obtaining a copy
 /// of this software and associated documentation files (the "Software"), to deal
@@ -30,22 +30,9 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 /// THE SOFTWARE.
 
-import Foundation
-
-protocol RequestBody {
-  var contentType: String { get }
-  func asData() throws -> Data
-}
-
-// MARK: - Implementation(s)
-struct EncodableBody: RequestBody {
-  let contentType = "application/json"
-  let encodable: Encodable
-  init(from encodable: Encodable) {
-    self.encodable = encodable
-  }
-  
-  func asData() throws -> Data {
-    try JSONEncoder().encode(encodable)
-  }
+enum APIConstants {
+    static let host = "api.petfinder.com"
+    static let grantType = "client_credentials"
+    static let clientId = "YourKeyHere"
+    static let clientSecret = "YourSecretHere"
 }

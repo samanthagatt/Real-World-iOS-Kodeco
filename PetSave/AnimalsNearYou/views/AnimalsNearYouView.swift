@@ -33,18 +33,18 @@
 import SwiftUI
 
 struct AnimalsNearYouView: View {
-  var body: some View {
-    NavigationView {
-      VStack {
-        Text("TODO: Animals Near You View")
-      }
-      .navigationTitle("Animals near you")
-    }.navigationViewStyle(StackNavigationViewStyle())
-  }
+    var body: some View {
+        NavigationView {
+            VStack {
+                Text("TODO: Animals Near You View")
+            }
+            .navigationTitle("Animals near you")
+        }.navigationViewStyle(StackNavigationViewStyle())
+    }
 }
 
 struct AnimalsNearYouView_Previews: PreviewProvider {
-  static var previews: some View {
-    AnimalsNearYouView()
-  }
+    static var previews: some View {
+        AnimalsNearYouView()
+    }
 }

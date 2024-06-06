@@ -32,47 +32,20 @@
 
 import Foundation
 
-protocol NetworkRequest {
-  var method: RequestMethod { get }
-  var scheme: String { get }
-  var host: String { get }
-  var path: String { get }
-  var queries: [String: String] { get }
-  var headers: [String: String] { get }
-  var body: RequestBody? { get }
+protocol RequestBody {
+    var contentType: String { get }
+    func asData() throws -> Data
 }
 
-extension NetworkRequest {
-  var method: RequestMethod { .get }
-  var scheme: String { "https" }
-  var host: String { APIConstants.host }
-  var queries: [String: String] { [:] }
-  var headers: [String: String] { [:] }
-  var body: RequestBody? { nil }
-  
-  func createURLRequest(authToken: String?) throws -> URLRequest {
-    // URL construction
-    var components = URLComponents()
-    components.scheme = scheme
-    components.host = host
-    components.path = path
-    for query in queries {
-      if components.queryItems == nil {
-        components.queryItems = []
-      }
-      components.queryItems?
-        .append(URLQueryItem(name: query.key, value: query.value))
+// MARK: - Implementation(s)
+struct EncodableBody: RequestBody {
+    let contentType = "application/json"
+    let encodable: Encodable
+    init(from encodable: Encodable) {
+        self.encodable = encodable
     }
-    guard let url = components.url else {
-      throw NetworkError.invalidUrl(url: scheme + host + path, params: queries)
+    
+    func asData() throws -> Data {
+        try JSONEncoder().encode(encodable)
     }
-    // Request construction
-    var urlRequest = URLRequest(url: url)
-    urlRequest.httpMethod = method.rawValue
-    urlRequest.allHTTPHeaderFields = headers
-    urlRequest.setValue(authToken, forHTTPHeaderField: "Authorization")
-    urlRequest.setValue(body?.contentType, forHTTPHeaderField: "Content-Type")
-    urlRequest.httpBody = try body?.asData()
-    return urlRequest
-  }
 }
