@@ -56,6 +56,8 @@
 		D6606A432C110652009D26CE /* RequestBody.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6606A422C110652009D26CE /* RequestBody.swift */; };
 		D6606A452C110B3D009D26CE /* NetworkError.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6606A442C110B3D009D26CE /* NetworkError.swift */; };
 		D6606A472C1212F5009D26CE /* NetworkRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6606A462C1212F5009D26CE /* NetworkRequest.swift */; };
+		D6606A4A2C1217AB009D26CE /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6606A492C1217AB009D26CE /* NetworkManager.swift */; };
+		D6D19B042C1236E500041F8D /* NetworkSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6D19B032C1236E500041F8D /* NetworkSession.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -129,6 +131,8 @@
 		D6606A422C110652009D26CE /* RequestBody.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestBody.swift; sourceTree = "<group>"; };
 		D6606A442C110B3D009D26CE /* NetworkError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkError.swift; sourceTree = "<group>"; };
 		D6606A462C1212F5009D26CE /* NetworkRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkRequest.swift; sourceTree = "<group>"; };
+		D6606A492C1217AB009D26CE /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
+		D6D19B032C1236E500041F8D /* NetworkSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkSession.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -354,6 +358,8 @@
 				D6606A3F2C1100C9009D26CE /* request */,
 				847F49F526D3403B00B94FB8 /* APIConstants.swift */,
 				D6606A442C110B3D009D26CE /* NetworkError.swift */,
+				D6606A492C1217AB009D26CE /* NetworkManager.swift */,
+				D6D19B032C1236E500041F8D /* NetworkSession.swift */,
 			);
 			path = network;
 			sourceTree = "<group>";
@@ -626,6 +632,7 @@
 				AE6A3816269B5DCD0054C842 /* Gender.swift in Sources */,
 				18D775C522AD944300AE281E /* ContentView.swift in Sources */,
 				8472DFAB26BF66EF000FEDAF /* LocationManager.swift in Sources */,
+				D6D19B042C1236E500041F8D /* NetworkSession.swift in Sources */,
 				AE6A3822269B5E1A0054C842 /* Organization.swift in Sources */,
 				84A59F7A269E920300237A83 /* AnimalEnvironment.swift in Sources */,
 				8472150826C1EC33001FD40B /* AnimalHeaderView.swift in Sources */,
@@ -642,6 +649,7 @@
 				D6606A472C1212F5009D26CE /* NetworkRequest.swift in Sources */,
 				84B0507026B0E2EB00E0A709 /* AnimalDetailRow.swift in Sources */,
 				8485B72726A4A3AB001874CB /* AnimalSearchType.swift in Sources */,
+				D6606A4A2C1217AB009D26CE /* NetworkManager.swift in Sources */,
 				1839F4B025190F2A00BB00F1 /* AppMain.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

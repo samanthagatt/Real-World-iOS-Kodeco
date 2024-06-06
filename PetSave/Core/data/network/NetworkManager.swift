@@ -1,15 +1,15 @@
 /// Copyright (c) 2024 Razeware LLC
-///
+/// 
 /// Permission is hereby granted, free of charge, to any person obtaining a copy
 /// of this software and associated documentation files (the "Software"), to deal
 /// in the Software without restriction, including without limitation the rights
 /// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 /// copies of the Software, and to permit persons to whom the Software is
 /// furnished to do so, subject to the following conditions:
-///
+/// 
 /// The above copyright notice and this permission notice shall be included in
 /// all copies or substantial portions of the Software.
-///
+/// 
 /// Notwithstanding the foregoing, you may not use, copy, modify, merge, publish,
 /// distribute, sublicense, create a derivative work, and/or sell copies of the
 /// Software in any work that is designed, intended, or marketed for pedagogical or
@@ -17,7 +17,7 @@
 /// or information technology.  Permission for such use, copying, modification,
 /// merger, publication, distribution, sublicensing, creation of derivative works,
 /// or sale is expressly withheld.
-///
+/// 
 /// This project and source code may use libraries or frameworks that are
 /// released under various Open-Source licenses. Use of those libraries and
 /// frameworks are governed by their own individual licenses.
@@ -32,51 +32,28 @@
 
 import Foundation
 
-protocol NetworkRequest {
-    var method: RequestMethod { get }
-    var scheme: String { get }
-    var host: String { get }
-    var path: String { get }
-    var queries: [String: String] { get }
-    var headers: [String: String] { get }
-    var body: RequestBody? { get }
-}
-
-extension NetworkRequest {
-    var method: RequestMethod { .get }
-    var scheme: String { "https" }
-    var host: String { APIConstants.host }
-    var queries: [String: String] { [:] }
-    var headers: [String: String] { [:] }
-    var body: RequestBody? { nil }
+class NetworkManager {
+    private let session: NetworkSession
     
-    func createURLRequest(authToken: String?) throws -> URLRequest {
-        // URL construction
-        var components = URLComponents()
-        components.scheme = scheme
-        components.host = host
-        components.path = path
-        for query in queries {
-            if components.queryItems == nil {
-                components.queryItems = []
-            }
-            components.queryItems?
-                .append(URLQueryItem(name: query.key, value: query.value))
+    init(session: NetworkSession = URLSession.shared) {
+        self.session = session
+    }
+    
+    func perform(_ request: any NetworkRequest, authToken: String?) async throws -> Data {
+        let (data, response) = try await session
+            .data(for: request.createURLRequest(authToken: authToken))
+        guard let code = (response as? HTTPURLResponse)?.statusCode else {
+            // Unlikely to occurr. If it's really an error, it'll show up later. Probably when trying to decode the data.
+            return data
         }
-        guard let url = components.url else {
-            throw NetworkError.invalidUrl(scheme: scheme, host: host, path: path, queries: queries)
+        if code == 401 { throw NetworkError.unauthenticated(url: "") }
+        if code == 403 { throw NetworkError.restricted(url: "") }
+        if 400...499 ~= code {
+            throw NetworkError.clientError(code: code, data: data, url: "")
         }
-        // Request construction
-        var urlRequest = URLRequest(url: url)
-        urlRequest.httpMethod = method.rawValue
-        urlRequest.allHTTPHeaderFields = headers
-        urlRequest.setValue(authToken, forHTTPHeaderField: "Authorization")
-        urlRequest.setValue(body?.contentType, forHTTPHeaderField: "Content-Type")
-        do {
-            urlRequest.httpBody = try body?.asData()
-        } catch let encodingError as EncodingError {
-            throw NetworkError.encoding(encodingError, url: url.absoluteString)
+        if 500...599 ~= code {
+            throw NetworkError.serverError(code: code, data: data, url: "")
         }
-        return urlRequest
+        return data
     }
 }
