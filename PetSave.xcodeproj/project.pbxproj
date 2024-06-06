@@ -52,6 +52,10 @@
 		AE6A3825269FC7670054C842 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE6A3824269FC7670054C842 /* User.swift */; };
 		D6606A372C10A1DE009D26CE /* Animal.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6606A362C10A1DE009D26CE /* Animal.swift */; };
 		D6606A3C2C10A50B009D26CE /* AnimalsMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6606A3B2C10A50B009D26CE /* AnimalsMock.swift */; };
+		D6606A3E2C10FDB2009D26CE /* NetworkRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6606A3D2C10FDB2009D26CE /* NetworkRequest.swift */; };
+		D6606A412C1100D8009D26CE /* RequestMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6606A402C1100D8009D26CE /* RequestMethod.swift */; };
+		D6606A432C110652009D26CE /* RequestBody.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6606A422C110652009D26CE /* RequestBody.swift */; };
+		D6606A452C110B3D009D26CE /* NetworkError.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6606A442C110B3D009D26CE /* NetworkError.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -121,6 +125,10 @@
 		AED3FC3326A863A2006D2BEE /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		D6606A362C10A1DE009D26CE /* Animal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Animal.swift; sourceTree = "<group>"; };
 		D6606A3B2C10A50B009D26CE /* AnimalsMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimalsMock.swift; sourceTree = "<group>"; };
+		D6606A3D2C10FDB2009D26CE /* NetworkRequest.swift */ = {isa = PBXFileReference; indentWidth = 2; lastKnownFileType = sourcecode.swift; path = NetworkRequest.swift; sourceTree = "<group>"; tabWidth = 2; usesTabs = 0; };
+		D6606A402C1100D8009D26CE /* RequestMethod.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestMethod.swift; sourceTree = "<group>"; };
+		D6606A422C110652009D26CE /* RequestBody.swift */ = {isa = PBXFileReference; indentWidth = 2; lastKnownFileType = sourcecode.swift; path = RequestBody.swift; sourceTree = "<group>"; };
+		D6606A442C110B3D009D26CE /* NetworkError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkError.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -159,6 +167,7 @@
 			indentWidth = 2;
 			sourceTree = "<group>";
 			tabWidth = 2;
+			usesTabs = 0;
 		};
 		18D775BE22AD944300AE281E /* Products */ = {
 			isa = PBXGroup;
@@ -343,6 +352,8 @@
 		AE6A377B269B56460054C842 /* api */ = {
 			isa = PBXGroup;
 			children = (
+				D6606A442C110B3D009D26CE /* NetworkError.swift */,
+				D6606A3F2C1100C9009D26CE /* request */,
 				847F49F526D3403B00B94FB8 /* APIConstants.swift */,
 			);
 			path = api;
@@ -418,6 +429,16 @@
 				AE6A3824269FC7670054C842 /* User.swift */,
 			);
 			path = user;
+			sourceTree = "<group>";
+		};
+		D6606A3F2C1100C9009D26CE /* request */ = {
+			isa = PBXGroup;
+			children = (
+				D6606A3D2C10FDB2009D26CE /* NetworkRequest.swift */,
+				D6606A402C1100D8009D26CE /* RequestMethod.swift */,
+				D6606A422C110652009D26CE /* RequestBody.swift */,
+			);
+			path = request;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -589,11 +610,14 @@
 				84A59F78269E906400237A83 /* AnimalAttributes.swift in Sources */,
 				AE6A3795269B59C20054C842 /* PetSave.xcdatamodeld in Sources */,
 				84A59F74269E8C4700237A83 /* PhotoSizes.swift in Sources */,
+				D6606A412C1100D8009D26CE /* RequestMethod.swift in Sources */,
+				D6606A432C110652009D26CE /* RequestBody.swift in Sources */,
 				AE6A380C269B5D9E0054C842 /* Age.swift in Sources */,
 				AE6A3810269B5DB10054C842 /* Coat.swift in Sources */,
 				AE6A3825269FC7670054C842 /* User.swift in Sources */,
 				847F4A0026D750BE00B94FB8 /* Persistence.swift in Sources */,
 				84B0507E26B0F12200E0A709 /* AnimalDetailCard.swift in Sources */,
+				D6606A452C110B3D009D26CE /* NetworkError.swift in Sources */,
 				84B0507826B0E8F500E0A709 /* AnimalContactLink.swift in Sources */,
 				84B0507C26B0EFA800E0A709 /* AddressFetcher.swift in Sources */,
 				8485B72926A4A3BF001874CB /* AnimalSearchAge.swift in Sources */,
@@ -605,6 +629,7 @@
 				8472DFAB26BF66EF000FEDAF /* LocationManager.swift in Sources */,
 				AE6A3822269B5E1A0054C842 /* Organization.swift in Sources */,
 				84A59F7A269E920300237A83 /* AnimalEnvironment.swift in Sources */,
+				D6606A3E2C10FDB2009D26CE /* NetworkRequest.swift in Sources */,
 				8472150826C1EC33001FD40B /* AnimalHeaderView.swift in Sources */,
 				8FDD2CA326B311AC00DBE33F /* Pagination.swift in Sources */,
 				D6606A372C10A1DE009D26CE /* Animal.swift in Sources */,
