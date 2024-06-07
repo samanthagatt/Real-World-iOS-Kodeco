@@ -18,7 +18,7 @@
 		8472150826C1EC33001FD40B /* AnimalHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8472150726C1EC33001FD40B /* AnimalHeaderView.swift */; };
 		8472DFAB26BF66EF000FEDAF /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8472DFAA26BF66EF000FEDAF /* LocationManager.swift */; };
 		8472DFCC26BF93B3000FEDAF /* AnimalsNearYouView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8472DFCB26BF93B3000FEDAF /* AnimalsNearYouView.swift */; };
-		847F49F626D3403B00B94FB8 /* APIConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 847F49F526D3403B00B94FB8 /* APIConstants.swift */; };
+		847F49F626D3403B00B94FB8 /* PetFinderAPIConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 847F49F526D3403B00B94FB8 /* PetFinderAPIConstants.swift */; };
 		847F4A0026D750BE00B94FB8 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 847F49FF26D750BE00B94FB8 /* Persistence.swift */; };
 		847F4A0626D754D400B94FB8 /* CoreDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 847F4A0526D754D400B94FB8 /* CoreDataTests.swift */; };
 		8485B72726A4A3AB001874CB /* AnimalSearchType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8485B72626A4A3AB001874CB /* AnimalSearchType.swift */; };
@@ -50,14 +50,23 @@
 		AE6A381C269B5DF20054C842 /* Size.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE6A381B269B5DF20054C842 /* Size.swift */; };
 		AE6A3822269B5E1A0054C842 /* Organization.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE6A3821269B5E1A0054C842 /* Organization.swift */; };
 		AE6A3825269FC7670054C842 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE6A3824269FC7670054C842 /* User.swift */; };
+		D607BD752C13573B00D7EB63 /* AuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D607BD742C13573B00D7EB63 /* AuthManager.swift */; };
+		D607BD772C13A4C100D7EB63 /* ResponseDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = D607BD762C13A4C100D7EB63 /* ResponseDecoder.swift */; };
+		D607BD792C13AC5100D7EB63 /* PatientTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = D607BD782C13AC5100D7EB63 /* PatientTask.swift */; };
+		D607BD7B2C13BD6700D7EB63 /* JSONDecoder+shared.swift in Sources */ = {isa = PBXBuildFile; fileRef = D607BD7A2C13BD6700D7EB63 /* JSONDecoder+shared.swift */; };
+		D607BD7D2C13BE9400D7EB63 /* PetFinderNetworkRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = D607BD7C2C13BE9400D7EB63 /* PetFinderNetworkRequest.swift */; };
 		D6606A372C10A1DE009D26CE /* Animal.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6606A362C10A1DE009D26CE /* Animal.swift */; };
 		D6606A3C2C10A50B009D26CE /* AnimalsMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6606A3B2C10A50B009D26CE /* AnimalsMock.swift */; };
 		D6606A412C1100D8009D26CE /* RequestMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6606A402C1100D8009D26CE /* RequestMethod.swift */; };
 		D6606A432C110652009D26CE /* RequestBody.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6606A422C110652009D26CE /* RequestBody.swift */; };
 		D6606A452C110B3D009D26CE /* NetworkError.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6606A442C110B3D009D26CE /* NetworkError.swift */; };
 		D6606A472C1212F5009D26CE /* NetworkRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6606A462C1212F5009D26CE /* NetworkRequest.swift */; };
-		D6606A4A2C1217AB009D26CE /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6606A492C1217AB009D26CE /* NetworkManager.swift */; };
+		D6606A4A2C1217AB009D26CE /* RequestManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6606A492C1217AB009D26CE /* RequestManager.swift */; };
 		D6D19B042C1236E500041F8D /* NetworkSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6D19B032C1236E500041F8D /* NetworkSession.swift */; };
+		D6D19B062C132CEE00041F8D /* AuthenticationRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6D19B052C132CEE00041F8D /* AuthenticationRequest.swift */; };
+		D6D19B0A2C13361300041F8D /* AuthToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6D19B092C13361300041F8D /* AuthToken.swift */; };
+		D6D19B0C2C13374E00041F8D /* AuthTokenMock.json in Resources */ = {isa = PBXBuildFile; fileRef = D6D19B0B2C13374E00041F8D /* AuthTokenMock.json */; };
+		D6D19B0E2C1340EB00041F8D /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6D19B0D2C1340EB00041F8D /* NetworkManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -91,7 +100,7 @@
 		8472150726C1EC33001FD40B /* AnimalHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimalHeaderView.swift; sourceTree = "<group>"; };
 		8472DFAA26BF66EF000FEDAF /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		8472DFCB26BF93B3000FEDAF /* AnimalsNearYouView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimalsNearYouView.swift; sourceTree = "<group>"; };
-		847F49F526D3403B00B94FB8 /* APIConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIConstants.swift; sourceTree = "<group>"; };
+		847F49F526D3403B00B94FB8 /* PetFinderAPIConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PetFinderAPIConstants.swift; sourceTree = "<group>"; };
 		847F49FF26D750BE00B94FB8 /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
 		847F4A0526D754D400B94FB8 /* CoreDataTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataTests.swift; sourceTree = "<group>"; };
 		8485B72626A4A3AB001874CB /* AnimalSearchType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimalSearchType.swift; sourceTree = "<group>"; };
@@ -125,14 +134,24 @@
 		AE6A3821269B5E1A0054C842 /* Organization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Organization.swift; sourceTree = "<group>"; };
 		AE6A3824269FC7670054C842 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		AED3FC3326A863A2006D2BEE /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
+		D607BD742C13573B00D7EB63 /* AuthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthManager.swift; sourceTree = "<group>"; };
+		D607BD762C13A4C100D7EB63 /* ResponseDecoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResponseDecoder.swift; sourceTree = "<group>"; };
+		D607BD782C13AC5100D7EB63 /* PatientTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PatientTask.swift; sourceTree = "<group>"; };
+		D607BD7A2C13BD6700D7EB63 /* JSONDecoder+shared.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "JSONDecoder+shared.swift"; sourceTree = "<group>"; };
+		D607BD7C2C13BE9400D7EB63 /* PetFinderNetworkRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PetFinderNetworkRequest.swift; sourceTree = "<group>"; };
 		D6606A362C10A1DE009D26CE /* Animal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Animal.swift; sourceTree = "<group>"; };
 		D6606A3B2C10A50B009D26CE /* AnimalsMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimalsMock.swift; sourceTree = "<group>"; };
 		D6606A402C1100D8009D26CE /* RequestMethod.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestMethod.swift; sourceTree = "<group>"; };
 		D6606A422C110652009D26CE /* RequestBody.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestBody.swift; sourceTree = "<group>"; };
 		D6606A442C110B3D009D26CE /* NetworkError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkError.swift; sourceTree = "<group>"; };
 		D6606A462C1212F5009D26CE /* NetworkRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkRequest.swift; sourceTree = "<group>"; };
-		D6606A492C1217AB009D26CE /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
+		D6606A492C1217AB009D26CE /* RequestManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestManager.swift; sourceTree = "<group>"; };
 		D6D19B032C1236E500041F8D /* NetworkSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkSession.swift; sourceTree = "<group>"; };
+		D6D19B052C132CEE00041F8D /* AuthenticationRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationRequest.swift; sourceTree = "<group>"; };
+		D6D19B072C132EA900041F8D /* PetFinderAuthKey.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = PetFinderAuthKey.xcconfig; sourceTree = "<group>"; };
+		D6D19B092C13361300041F8D /* AuthToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthToken.swift; sourceTree = "<group>"; };
+		D6D19B0B2C13374E00041F8D /* AuthTokenMock.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = AuthTokenMock.json; sourceTree = "<group>"; };
+		D6D19B0D2C1340EB00041F8D /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -204,6 +223,7 @@
 			children = (
 				18D775C922AD944400AE281E /* Preview Assets.xcassets */,
 				849C44EE26A26F70009899B0 /* AnimalsMock.json */,
+				D6D19B0B2C13374E00041F8D /* AuthTokenMock.json */,
 			);
 			path = "Preview Content";
 			sourceTree = "<group>";
@@ -291,6 +311,7 @@
 		AE6A376D269A885E0054C842 /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				AE6A377B269B56460054C842 /* network */,
 				AE6A3775269B56010054C842 /* data */,
 				AE6A3776269B56100054C842 /* domain */,
 				AE6A3778269B561F0054C842 /* utils */,
@@ -320,7 +341,6 @@
 		AE6A3775269B56010054C842 /* data */ = {
 			isa = PBXGroup;
 			children = (
-				AE6A377B269B56460054C842 /* network */,
 				AE6A377A269B563F0054C842 /* coreData */,
 			);
 			path = data;
@@ -339,6 +359,8 @@
 			children = (
 				84B0507B26B0EFA800E0A709 /* AddressFetcher.swift */,
 				8472DFAA26BF66EF000FEDAF /* LocationManager.swift */,
+				D607BD782C13AC5100D7EB63 /* PatientTask.swift */,
+				D607BD7A2C13BD6700D7EB63 /* JSONDecoder+shared.swift */,
 			);
 			path = utils;
 			sourceTree = "<group>";
@@ -355,11 +377,13 @@
 		AE6A377B269B56460054C842 /* network */ = {
 			isa = PBXGroup;
 			children = (
+				D6D19B082C1335FE00041F8D /* auth */,
 				D6606A3F2C1100C9009D26CE /* request */,
-				847F49F526D3403B00B94FB8 /* APIConstants.swift */,
+				847F49F526D3403B00B94FB8 /* PetFinderAPIConstants.swift */,
 				D6606A442C110B3D009D26CE /* NetworkError.swift */,
-				D6606A492C1217AB009D26CE /* NetworkManager.swift */,
 				D6D19B032C1236E500041F8D /* NetworkSession.swift */,
+				D6D19B0D2C1340EB00041F8D /* NetworkManager.swift */,
+				D6D19B072C132EA900041F8D /* PetFinderAuthKey.xcconfig */,
 			);
 			path = network;
 			sourceTree = "<group>";
@@ -439,11 +463,24 @@
 		D6606A3F2C1100C9009D26CE /* request */ = {
 			isa = PBXGroup;
 			children = (
+				D6606A492C1217AB009D26CE /* RequestManager.swift */,
 				D6606A402C1100D8009D26CE /* RequestMethod.swift */,
 				D6606A422C110652009D26CE /* RequestBody.swift */,
 				D6606A462C1212F5009D26CE /* NetworkRequest.swift */,
+				D607BD7C2C13BE9400D7EB63 /* PetFinderNetworkRequest.swift */,
+				D607BD762C13A4C100D7EB63 /* ResponseDecoder.swift */,
 			);
 			path = request;
+			sourceTree = "<group>";
+		};
+		D6D19B082C1335FE00041F8D /* auth */ = {
+			isa = PBXGroup;
+			children = (
+				D6D19B052C132CEE00041F8D /* AuthenticationRequest.swift */,
+				D6D19B092C13361300041F8D /* AuthToken.swift */,
+				D607BD742C13573B00D7EB63 /* AuthManager.swift */,
+			);
+			path = auth;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -559,6 +596,7 @@
 			files = (
 				18D775D822AD963800AE281E /* LaunchScreen.storyboard in Resources */,
 				18D775CA22AD944400AE281E /* Preview Assets.xcassets in Resources */,
+				D6D19B0C2C13374E00041F8D /* AuthTokenMock.json in Resources */,
 				18D775C722AD944400AE281E /* Assets.xcassets in Resources */,
 				849C44EF26A26F70009899B0 /* AnimalsMock.json in Resources */,
 			);
@@ -611,8 +649,10 @@
 				D6606A3C2C10A50B009D26CE /* AnimalsMock.swift in Sources */,
 				AE6A3782269B57940054C842 /* SearchView.swift in Sources */,
 				845137A72796247E00A4DA57 /* AnimalTypeSuggestionView.swift in Sources */,
-				847F49F626D3403B00B94FB8 /* APIConstants.swift in Sources */,
+				847F49F626D3403B00B94FB8 /* PetFinderAPIConstants.swift in Sources */,
+				D6D19B0A2C13361300041F8D /* AuthToken.swift in Sources */,
 				84A59F78269E906400237A83 /* AnimalAttributes.swift in Sources */,
+				D607BD772C13A4C100D7EB63 /* ResponseDecoder.swift in Sources */,
 				AE6A3795269B59C20054C842 /* PetSave.xcdatamodeld in Sources */,
 				84A59F74269E8C4700237A83 /* PhotoSizes.swift in Sources */,
 				D6606A412C1100D8009D26CE /* RequestMethod.swift in Sources */,
@@ -623,14 +663,17 @@
 				847F4A0026D750BE00B94FB8 /* Persistence.swift in Sources */,
 				84B0507E26B0F12200E0A709 /* AnimalDetailCard.swift in Sources */,
 				D6606A452C110B3D009D26CE /* NetworkError.swift in Sources */,
+				D607BD792C13AC5100D7EB63 /* PatientTask.swift in Sources */,
 				84B0507826B0E8F500E0A709 /* AnimalContactLink.swift in Sources */,
 				84B0507C26B0EFA800E0A709 /* AddressFetcher.swift in Sources */,
 				8485B72926A4A3BF001874CB /* AnimalSearchAge.swift in Sources */,
 				84B0507226B0E3C300E0A709 /* AnimalContactsView.swift in Sources */,
+				D607BD7D2C13BE9400D7EB63 /* PetFinderNetworkRequest.swift in Sources */,
 				AE6A3786269B58350054C842 /* AnimalDetailsView.swift in Sources */,
 				84A59F7E269E9BDB00237A83 /* AdoptionStatus.swift in Sources */,
 				AE6A3816269B5DCD0054C842 /* Gender.swift in Sources */,
 				18D775C522AD944300AE281E /* ContentView.swift in Sources */,
+				D607BD752C13573B00D7EB63 /* AuthManager.swift in Sources */,
 				8472DFAB26BF66EF000FEDAF /* LocationManager.swift in Sources */,
 				D6D19B042C1236E500041F8D /* NetworkSession.swift in Sources */,
 				AE6A3822269B5E1A0054C842 /* Organization.swift in Sources */,
@@ -641,15 +684,18 @@
 				845137A82796247E00A4DA57 /* EmptyResultsView.swift in Sources */,
 				8472DFCC26BF93B3000FEDAF /* AnimalsNearYouView.swift in Sources */,
 				84A59F7C269E92F800237A83 /* APIColors.swift in Sources */,
+				D6D19B062C132CEE00041F8D /* AuthenticationRequest.swift in Sources */,
 				AE6A380E269B5DA90054C842 /* Breed.swift in Sources */,
 				84A59F76269E8DF000237A83 /* VideoLink.swift in Sources */,
 				84B0507426B0E45000E0A709 /* AnimalLocationView.swift in Sources */,
 				845137A62796247E00A4DA57 /* SuggestionsGrid.swift in Sources */,
 				AE6A3814269B5DC20054C842 /* Details.swift in Sources */,
+				D607BD7B2C13BD6700D7EB63 /* JSONDecoder+shared.swift in Sources */,
+				D6D19B0E2C1340EB00041F8D /* NetworkManager.swift in Sources */,
 				D6606A472C1212F5009D26CE /* NetworkRequest.swift in Sources */,
 				84B0507026B0E2EB00E0A709 /* AnimalDetailRow.swift in Sources */,
 				8485B72726A4A3AB001874CB /* AnimalSearchType.swift in Sources */,
-				D6606A4A2C1217AB009D26CE /* NetworkManager.swift in Sources */,
+				D6606A4A2C1217AB009D26CE /* RequestManager.swift in Sources */,
 				1839F4B025190F2A00BB00F1 /* AppMain.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -757,7 +803,7 @@
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = "";
 			};
 			name = Debug;
 		};
@@ -815,7 +861,7 @@
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = RELEASE;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = "";
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -923,7 +969,7 @@
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG_COREDATA;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = "";
 			};
 			name = "Debug (Core Data)";
 		};

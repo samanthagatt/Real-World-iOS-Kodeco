@@ -1,15 +1,15 @@
 /// Copyright (c) 2024 Razeware LLC
-///
+/// 
 /// Permission is hereby granted, free of charge, to any person obtaining a copy
 /// of this software and associated documentation files (the "Software"), to deal
 /// in the Software without restriction, including without limitation the rights
 /// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 /// copies of the Software, and to permit persons to whom the Software is
 /// furnished to do so, subject to the following conditions:
-///
+/// 
 /// The above copyright notice and this permission notice shall be included in
 /// all copies or substantial portions of the Software.
-///
+/// 
 /// Notwithstanding the foregoing, you may not use, copy, modify, merge, publish,
 /// distribute, sublicense, create a derivative work, and/or sell copies of the
 /// Software in any work that is designed, intended, or marketed for pedagogical or
@@ -17,7 +17,7 @@
 /// or information technology.  Permission for such use, copying, modification,
 /// merger, publication, distribution, sublicensing, creation of derivative works,
 /// or sale is expressly withheld.
-///
+/// 
 /// This project and source code may use libraries or frameworks that are
 /// released under various Open-Source licenses. Use of those libraries and
 /// frameworks are governed by their own individual licenses.
@@ -32,51 +32,29 @@
 
 import Foundation
 
-protocol NetworkRequest {
-    var method: RequestMethod { get }
-    var scheme: String { get }
-    var host: String { get }
-    var path: String { get }
-    var queries: [String: String] { get }
-    var headers: [String: String] { get }
-    var body: RequestBody? { get }
-}
-
-extension NetworkRequest {
-    var method: RequestMethod { .get }
-    var scheme: String { "https" }
-    var host: String { APIConstants.host }
-    var queries: [String: String] { [:] }
-    var headers: [String: String] { [:] }
-    var body: RequestBody? { nil }
+/// Task that will wait to be manually executed, and will only be kicked off once(*) while inflight (subsequent calls will wait for current task to finish executing). Task will start executing again (upon call to `execute()`) if previous executions have been completed.
+struct PatientTask<Success, Failure: Error> {
+    private var task: Task<Result<Success, Failure>, Never>?
+    private let executable: () async -> Result<Success, Failure>
     
-    func createURLRequest(authToken: String?) throws -> URLRequest {
-        // URL construction
-        var components = URLComponents()
-        components.scheme = scheme
-        components.host = host
-        components.path = path
-        for query in queries {
-            if components.queryItems == nil {
-                components.queryItems = []
+    init(executable: @escaping () async -> Result<Success, Failure>) {
+        self.executable = executable
+    }
+    
+    mutating func execute() async throws(Failure) -> Result<Success, Failure> {
+        if let task {
+            // Task is already running
+            return await task.value
+        } else {
+            let newTask = Task { [executable] in
+                await executable()
             }
-            components.queryItems?
-                .append(URLQueryItem(name: query.key, value: query.value))
+            // (*) Assigning the newTask in two steps allows for a very small window of time where the executable is running but ThreadSafeTask ins't aware
+            // The alternative is to directly assign the new `Task { }` to `task` but then you'd have to use a force unwrap to return `await task!.value`
+            task = newTask
+            let value = await newTask.value
+            task = nil
+            return value
         }
-        guard let url = components.url else {
-            throw NetworkError.invalidUrl(scheme: scheme, host: host, path: path, queries: queries)
-        }
-        // Request construction
-        var urlRequest = URLRequest(url: url)
-        urlRequest.httpMethod = method.rawValue
-        urlRequest.allHTTPHeaderFields = headers
-        urlRequest.setValue(authToken, forHTTPHeaderField: "Authorization")
-        urlRequest.setValue(body?.contentType, forHTTPHeaderField: "Content-Type")
-        do {
-            urlRequest.httpBody = try body?.asData()
-        } catch let encodingError as EncodingError {
-            throw NetworkError.encoding(encodingError, url: url.absoluteString)
-        }
-        return urlRequest
     }
 }

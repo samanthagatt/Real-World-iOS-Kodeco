@@ -2,6 +2,10 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>PETFINDER_AUTH_CLIENT_ID</key>
+	<string>$(PETFINDER_AUTH_CLIENT_ID)</string>
+	<key>PETFINDER_AUTH_CLIENT_SECRET</key>
+	<string>$(PETFINDER_AUTH_CLIENT_SECRET)</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>PetSave uses your location to find animals near you.</string>
 	<key>CFBundleDevelopmentRegion</key>

@@ -33,7 +33,11 @@
 import Foundation
 
 enum NetworkError: CustomNSError, CustomStringConvertible, Equatable {
-    case invalidUrl(scheme: String, host: String, path: String, queries: [String: String])
+    case invalidUrl(scheme: String?, host: String, path: String, queries: [String: String])
+    /// Errors getting request to server or getting response back
+    case timeout(url: String), 
+         noNetwork(url: String),
+         transportError(Error, url: String)
     /// Coding errors
     case encoding(EncodingError, url: String),
          decoding(DecodingError, data: Data?, url: String)
@@ -42,6 +46,8 @@ enum NetworkError: CustomNSError, CustomStringConvertible, Equatable {
          restricted(url: String),
          clientError(code: Int, data: Data, url: String),
          serverError(code: Int, data: Data, url: String)
+    /// Errors thrown by dependent functions and have an unexpected type
+    case uncaught(Error, source: String, expectedType: String, url: String)
     
     var path: String? {
         guard let url = URL(string: url) else { return nil }
@@ -57,7 +63,11 @@ enum NetworkError: CustomNSError, CustomStringConvertible, Equatable {
                 .unauthenticated(let url),
                 .restricted(let url),
                 .clientError(_, _, let url),
-                .serverError(_, _, let url):
+                .serverError(_, _, let url),
+                .timeout(let url),
+                .noNetwork(let url),
+                .transportError(_, let url),
+                .uncaught(_, _, _, let url):
             return url
         }
     }
@@ -68,26 +78,40 @@ extension NetworkError {
     var errorCode: Int {
         switch self {
         case .invalidUrl: return 7000
-        case .encoding: return 7100
-        case .decoding: return 7200
-        case .unauthenticated: return 7300
-        case .restricted: return 7400
-        case .clientError: return 7500
-        case .serverError: return 7600
+        case .timeout: return 7001
+        case .noNetwork: return 7002
+        case .transportError: return 7003
+        case .encoding: return 7004
+        case .decoding: return 7005
+        case .unauthenticated: return 7006
+        case .restricted: return 7007
+        case .clientError: return 7008
+        case .serverError: return 7009
+        case .uncaught: return 7010
         }
     }
     // Not necessary. Just playing around
     var errorUserInfo: [String : Any] {
+        var result: [String: Any] = ["url": url]
         switch self {
-        case .invalidUrl, .unauthenticated, .restricted: return [:]
+        case .invalidUrl, .timeout, .noNetwork, .unauthenticated, .restricted:
+            break
+        case .transportError(let transportError, _):
+            result["transportError"] = transportError
         case .encoding(let encodingError, _):
-            return ["encodingError": encodingError]
-        case .decoding(let decodingError, let data, _):
-            return ["decodingError": decodingError, "data": data as Any]
-        case .clientError(let code, let data, _),
-                .serverError(let code, let data, _):
-            return ["errorCode": code, "data": data]
+            result["encodingError"] = encodingError
+        case let .decoding(decodingError, data, _):
+            result["decodingError"] = decodingError
+            result["data"] = data as Any
+        case let .clientError(code, data, _), let .serverError(code, data, _):
+            result["errorCode"] = code
+            result["data"] = data
+        case let .uncaught(error, source, expectedType, _):
+            result["source"] = source
+            result["underlyingError"] = error
+            result["expectedType"] = expectedType
         }
+        return result
     }
 }
 
@@ -96,7 +120,7 @@ extension NetworkError {
     var description: String {
         var result = "--- NETWORK ERROR ---\n"
         result += "Originating from request to url: \(url)\n"
-        func responseErrorDesc(_ code: Int, _ response: String, _ url: String) {
+        func responseErrorDesc(_ code: Int, _ response: String) {
             result += "Network request resulted in a \(code) status code."
             result += (response.isEmpty ? "" :
                         "\nBackend responded with the message: \(response)")
@@ -104,14 +128,20 @@ extension NetworkError {
         switch self {
         case let .invalidUrl(scheme, host, path, queries):
             result += "URLComponents failed to generate a url for\n"
-            result += "scheme: " + scheme + "\n"
+            result += "scheme: \(scheme ?? "nil")\n"
             result += "host: " + host + "\n"
             result += "path: " + path + "\n"
             result += "queries: \(queries)"
+        case .timeout:
+            result += "Network request timed out"
+        case .noNetwork:
+            result += "No network connection"
+        case .transportError(let error, _):
+            result += "Transport error:\n\(error.localizedDescription)"
         case .encoding(let encodingError, _):
             result += "Encoding failed while adding the body to the request.\n"
             result += "Underlying error: \(encodingError)"
-        case .decoding(let decodingError, let data, _):
+        case let .decoding(decodingError, data, _):
             result += "Decoding error:\n"
             result += "\(decodingError)"
             var jsonString = "No data"
@@ -121,14 +151,19 @@ extension NetworkError {
             result += "Decoding failed while parsing the response from the backend.\n"
             result += "Underlying error: \(decodingError),\n"
             result += "JSON: \(jsonString)"
-        case let .unauthenticated(url):
-            responseErrorDesc(401, "", url)
-        case let .restricted(url):
-            responseErrorDesc(403, "", url)
-        case let .clientError(code: code, data: data, url: url):
-            responseErrorDesc(code, String(decoding: data, as: UTF8.self), url)
-        case let .serverError(code, data, url):
-            responseErrorDesc(code, String(decoding: data, as: UTF8.self), url)
+        case .unauthenticated:
+            responseErrorDesc(401, "")
+        case .restricted:
+            responseErrorDesc(403, "")
+        case let .clientError(code: code, data: data, _):
+            responseErrorDesc(code, String(decoding: data, as: UTF8.self))
+        case let .serverError(code, data, _):
+            responseErrorDesc(code, String(decoding: data, as: UTF8.self))
+        case let .uncaught(error, source, expectedType, _):
+            result += "Uncaught Error.\n"
+            result += "Source: \(source)\n"
+            result += "Expected type: \(expectedType)\n"
+            result += "Underlying error:\n\(error)"
         }
         return result
     }
@@ -144,19 +179,32 @@ extension NetworkError {
             if case .invalidUrl(_, _, _, let rQueries) = rhs {
                 return lQueries == rQueries
             }
-        case let .encoding(lEncodingError, _):
-            if case let .encoding(rEncodingError, _) = rhs {
-                return "\(lEncodingError)" == "\(rEncodingError)"
+        case .timeout:
+            if case .timeout = rhs {
+                return true
+            }
+        case .noNetwork:
+            if case .noNetwork = rhs {
+                return true
+            }
+        case .transportError(let lTransportError, _):
+            if case .transportError(let rTransportError, _) = rhs {
+                return (lTransportError as NSError) == (rTransportError as NSError)
+            }
+        case .encoding(let lEncodingError, _):
+            if case .encoding(let rEncodingError, _) = rhs {
+                return (lEncodingError as NSError) == (rEncodingError as NSError)
             }
         case let .decoding(lDecodingError, lData, _):
             if case let .decoding(rDecodingError, rData, _) = rhs {
-                return "\(lDecodingError)" == "\(rDecodingError)" && lData == rData
+                return ((lDecodingError as NSError) == (rDecodingError as NSError) &&
+                        lData == rData)
             }
-        case .unauthenticated(_):
+        case .unauthenticated:
             if case .unauthenticated = rhs {
                 return true
             }
-        case .restricted(_):
+        case .restricted:
             if case .restricted = rhs {
                 return true
             }
@@ -168,6 +216,12 @@ extension NetworkError {
             if case let .serverError(rCode, rData, rUrl) = rhs {
                 return lCode == rCode && lData == rData && lUrl == rUrl
             }
+        case let .uncaught(lError, lSource, lExpectedError, _):
+            if case let .uncaught(rError, rSource, rExpectedError, _) = rhs {
+                return ((lError as NSError) == (rError as NSError) &&
+                        lSource == rSource &&
+                        lExpectedError == rExpectedError)
+            }
         }
         return false
     }
@@ -175,15 +229,15 @@ extension NetworkError {
 
 /// Crude url construction just for debugging
 private func debugUrlFrom(
-    _ scheme: String,
+    _ scheme: String?,
     _ host: String,
     _ path: String,
     _ queries: [String: String]
 ) -> String {
     var host = host
     var path = path
-    var intermediate = scheme
-    if !scheme.hasSuffix("://") {
+    var intermediate = scheme ?? ""
+    if let scheme, !scheme.hasSuffix("://") {
         intermediate += "://"
     }
     if host.hasPrefix("://") {

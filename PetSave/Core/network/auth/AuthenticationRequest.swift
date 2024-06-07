@@ -32,28 +32,15 @@
 
 import Foundation
 
-class NetworkManager {
-    private let session: NetworkSession
-    
-    init(session: NetworkSession = URLSession.shared) {
-        self.session = session
-    }
-    
-    func perform(_ request: any NetworkRequest, authToken: String?) async throws -> Data {
-        let (data, response) = try await session
-            .data(for: request.createURLRequest(authToken: authToken))
-        guard let code = (response as? HTTPURLResponse)?.statusCode else {
-            // Unlikely to occurr. If it's really an error, it'll show up later. Probably when trying to decode the data.
-            return data
-        }
-        if code == 401 { throw NetworkError.unauthenticated(url: "") }
-        if code == 403 { throw NetworkError.restricted(url: "") }
-        if 400...499 ~= code {
-            throw NetworkError.clientError(code: code, data: data, url: "")
-        }
-        if 500...599 ~= code {
-            throw NetworkError.serverError(code: code, data: data, url: "")
-        }
-        return data
-    }
+struct AuthTokenRequest: PetFinderNetworkRequest {
+    typealias ReturnType = AuthToken
+    let path: String = "/oauth2/token"
+    let params: [String: Any] = [
+        "grant_type": PetFinderAPIConstants.grantType,
+        "client_id": PetFinderAPIConstants.clientId,
+        "client_secret": PetFinderAPIConstants.clientSecret
+    ]
+    let requestType: RequestMethod = .post
+    let requiresAuth: Bool = false
+    let responseDecoder: any ResponseDecoder<AuthToken> = JSONResponseDecoder(.convertFromSnakeCase)
 }
