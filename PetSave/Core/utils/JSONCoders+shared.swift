@@ -32,6 +32,10 @@
 
 import Foundation
 
+extension JSONEncoder {
+    static var shared = JSONEncoder()
+}
+
 extension JSONDecoder {
     static var shared = JSONDecoder()
 }

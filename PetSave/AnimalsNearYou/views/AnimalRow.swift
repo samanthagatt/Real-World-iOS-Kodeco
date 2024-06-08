@@ -30,46 +30,42 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 /// THE SOFTWARE.
 
-import Foundation
+import SwiftUI
 
-protocol AuthToken: Decodable {
-    var token: String { get }
-    var isExpired: Bool { get }
-}
-
-struct OAuthToken: AuthToken {
-    let accessToken: String
-    let tokenType: String
-    /// Non-optional because it's recommended even though it's technically not required
-    let expiresIn: Int
-    var refreshToken: String?
-    var scope: String?
-    let requestedAt: Date
-    let expiresAt: Date
-    var isExpired: Bool { Date() >= expiresAt }
-    /// Full token string. Includes token type and access token. Ex. "Bearer sampleAccessTokenHere"
-    var token: String { "\(tokenType) \(accessToken)" }
+struct AnimalRow: View {
+    let animal: Animal
     
-    enum CodingKeys: String, CodingKey {
-        case accessToken
-        case tokenType
-        case expiresIn
-        case refreshToken
-        case scope
-    }
-    
-    init(from decoder: any Decoder) throws {
-        let now = Date()
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        let expiresIn = try container.decode(Int.self, forKey: .expiresIn)
-        self.accessToken = try container.decode(String.self, forKey: .accessToken)
-        self.tokenType = try container.decode(String.self, forKey: .tokenType)
-        self.expiresIn = expiresIn
-        self.refreshToken = try container.decodeIfPresent(String.self, forKey: .refreshToken)
-        self.scope = try container.decodeIfPresent(String.self, forKey: .scope)
-        self.requestedAt = now
-        self.expiresAt = Calendar.current.date(byAdding: .second, value: expiresIn, to: now) ?? now
+    var body: some View {
+        HStack {
+            AsyncImage(url: animal.picture) { image in
+                image.resizable()
+            } placeholder: {
+                Image("rw-logo").resizable().overlay {
+                    if animal.picture != nil {
+                        ProgressView()
+                            .frame(maxWidth: .infinity, maxHeight: .infinity)
+                            .background(.gray.opacity(0.4))
+                    }
+                }
+            }
+            .aspectRatio(contentMode: .fit)
+            .frame(width: 112, height: 112)
+            .cornerRadius(8)
+            
+            VStack(alignment: .leading) {
+                Text(animal.name)
+                    .multilineTextAlignment(.center)
+                    .font(.title3)
+            }
+            .lineLimit(1)
+        }
     }
 }
 
-
+struct AnimalRow_Previews: PreviewProvider {
+    static var previews: some View {
+        if let animal = Animal.mocks.first {
+            AnimalRow(animal: animal)
+        }
+    }
+}

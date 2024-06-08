@@ -42,17 +42,17 @@ protocol ResponseDecoder<ReturnType> {
 
 // MARK: - Implementation(s)
 struct JSONResponseDecoder<ReturnType: Decodable>: ResponseDecoder {
-    var keyDecodingStrategy: JSONDecoder.KeyDecodingStrategy
+    var strategy: JSONDecoder.KeyDecodingStrategy
     
-    init(_ keyDecodingStrategy: JSONDecoder.KeyDecodingStrategy = .useDefaultKeys) {
-        self.keyDecodingStrategy = keyDecodingStrategy
+    init(_ strategy: JSONDecoder.KeyDecodingStrategy = .useDefaultKeys) {
+        self.strategy = strategy
     }
     
     func decode(
         data: Data,
         origin url: String
     ) throws(NetworkError) -> ReturnType {
-        JSONDecoder.shared.keyDecodingStrategy = keyDecodingStrategy
+        JSONDecoder.shared.keyDecodingStrategy = strategy
         do {
             return try JSONDecoder.shared.decode(ReturnType.self, from: data)
         } catch let error as DecodingError {

@@ -32,7 +32,7 @@
 
 import Foundation
 
-class RequestManager {
+class NetworkManager {
     private let session: NetworkSession
     
     init(session: NetworkSession = URLSession.shared) {

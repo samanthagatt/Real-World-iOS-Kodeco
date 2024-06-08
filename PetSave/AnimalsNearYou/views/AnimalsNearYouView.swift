@@ -33,13 +33,58 @@
 import SwiftUI
 
 struct AnimalsNearYouView: View {
+    private static var networking = {
+        PetFinderNetworkManager(authManager: PetFinderAuthManager(
+            networkManager: NetworkManager(session: MockNetworkSession { _ in
+                (AnimalsContainer.getMockData() ?? Data(),
+                 HTTPURLResponse.mocked(statusCode: 200))
+            })
+        ))
+    }()
+    
+    @State var isLoading: Bool = true
+    @State var animals: [Animal] = []
+    
     var body: some View {
         NavigationView {
-            VStack {
-                Text("TODO: Animals Near You View")
+            List {
+                ForEach(animals) { animal in
+                    AnimalRow(animal: animal)
+                }
             }
+            .task {
+                await fetchAnimals()
+            }
+            .listStyle(.plain)
             .navigationTitle("Animals near you")
-        }.navigationViewStyle(StackNavigationViewStyle())
+            .overlay {
+                if isLoading {
+                    ProgressView("Finding Animals near you...")
+                }
+            }
+        }
+        .navigationViewStyle(StackNavigationViewStyle())
+    }
+    
+    @MainActor func fetchAnimals() async {
+        do {
+            isLoading = true
+            async let container = Self.networking
+                .load(AnimalsRequest.getAllNear(
+                    lat: nil,
+                    lon: nil,
+                    page: 1
+                ))
+            await simulateNetworkingTime()
+            self.animals = try await container.animals
+            isLoading = false
+        } catch {
+            print("PET_SAVE_ERROR[\(Date())] Error fetching animals:\n\(error)")
+        }
+    }
+    
+    func simulateNetworkingTime() async {
+        try? await Task.sleep(nanoseconds: 150_000_000)
     }
 }
 

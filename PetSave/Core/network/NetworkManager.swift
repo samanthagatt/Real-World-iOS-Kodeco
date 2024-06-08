@@ -32,25 +32,26 @@
 
 import Foundation
 
-class NetworkManager {
-    private var authManager: AuthManager
-    private var requestManager: RequestManager
+protocol AuthedNetworkManager<Auth>: AnyObject {
+    associatedtype Token: AuthToken
+    associatedtype Auth: AuthManager<Token>
+    var authManager: Auth { get }
+    init(authManager: Auth)
+}
+
+extension AuthedNetworkManager {
+    var networkManager: NetworkManager { authManager.networkManager }
     
-    init(authManager: AuthManager, requestManager: RequestManager) {
-        self.authManager = authManager
-        self.requestManager = requestManager
-    }
-    
-    /// - parameter forceRefreshAuthToken: Forces the auth token to refresh even if the request does not require authentication
+    /// - parameter forceFetchAuthToken: Forces the auth token to be fetched again even if the request does not require authentication
     func load<T>(
         _ request: any NetworkRequest<T>,
-        forceRefreshAuthToken: Bool
+        forceFetchAuthToken: Bool
     ) async throws(NetworkError) -> T {
         var authToken: String?
-        if request.requiresAuth || forceRefreshAuthToken {
-            authToken = try await authManager.getToken(refreshBeforeExpiry: forceRefreshAuthToken)
+        if request.requiresAuth || forceFetchAuthToken {
+            authToken = try await authManager.getTokenString(fetchBeforeExpiry: forceFetchAuthToken)
         }
-        return try await requestManager.load(request, with: authToken)
+        return try await networkManager.load(request, with: authToken)
     }
     
     /// - parameter forceRefreshAuthTokenIfApplicable: Only forces the auth token to refresh if the request requires authentication
@@ -60,8 +61,18 @@ class NetworkManager {
     ) async throws(NetworkError) -> T {
         var authToken: String?
         if request.requiresAuth {
-            authToken = try await authManager.getToken(refreshBeforeExpiry: forceRefreshAuthTokenIfApplicable)
+            authToken = try await authManager.getTokenString(fetchBeforeExpiry: forceRefreshAuthTokenIfApplicable)
         }
-        return try await requestManager.load(request, with: authToken)
+        return try await networkManager.load(request, with: authToken)
+    }
+}
+
+class PetFinderNetworkManager: AuthedNetworkManager {
+    // I feel the compiler should be able to derive this from the authManager type and/or the required init 🤔
+    typealias Token = OAuthToken
+    var authManager: PetFinderAuthManager
+    
+    required init(authManager: PetFinderAuthManager) {
+        self.authManager = authManager
     }
 }

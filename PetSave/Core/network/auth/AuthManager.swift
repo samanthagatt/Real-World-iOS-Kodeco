@@ -32,36 +32,78 @@
 
 import Foundation
 
-class AuthManager {
-    private var task: PatientTask<String, NetworkError>
-    private var currentToken: AuthToken?
+protocol AuthTokenStorage<Token> {
+    associatedtype Token
+    func get(key: String) -> String
+    func set(key: String, value: Token) -> String
+    func delete(key: String) -> Bool
+}
+
+func thissss() {
+    let tag = "com.example.keys.mykey"
+    let key = "currentAuthToken"
+    let addquery: [String: Any] = [
+        kSecClass as String: kSecClassKey,
+        kSecAttrApplicationTag as String: Data(tag.utf8),
+        kSecValueRef as String: key
+    ]
+}
+
+class AuthManager<Token: AuthToken> {
+    var task: PatientTask<Token, NetworkError>
+    var currentToken: Token?
+    var networkManager: NetworkManager
     
-    init(requestManager: RequestManager) {
+    init(networkManager: NetworkManager, authRequest: any NetworkRequest<Token>) {
+        self.networkManager = networkManager
         self.task = PatientTask {
-            await Self.tokenRequest(requestManager)
+            await Self.tokenRequest(networkManager, authRequest)
         }
     }
     
-    func getToken(refreshBeforeExpiry: Bool = false) async throws(NetworkError) -> String {
+    func getToken(fetchBeforeExpiry: Bool) async throws(NetworkError) -> Token {
         guard let currentToken,
-                currentToken.expiresAt <= Date(),
-                !refreshBeforeExpiry else {
+                !currentToken.isExpired,
+                !fetchBeforeExpiry else {
             // If no current token, current token has expired, or refreshBeforeExpiry is true
-            return try await task.execute().get()
+            let token = try await task.execute().get()
+            currentToken = token
+            return token
         }
         // If the current token has not expired and refreshBeforeExpiry == false
-        return currentToken.token
+        return currentToken
     }
     
-    private static func tokenRequest(_ requestManager: RequestManager) async -> Result<String, NetworkError> {
+    func getToken() async throws(NetworkError) -> Token {
+        try await getToken(fetchBeforeExpiry: false)
+    }
+    
+    private static func tokenRequest(
+        _ networkManager: NetworkManager,
+        _ authRequest: any NetworkRequest<Token>
+    ) async -> Result<Token, NetworkError> {
         // TODO: Typed throws in closures?
         // Why does trying to do exactly this inside the closure for `PatientTask { }` produce the error:
         // Cannot convert value of type 'any Error' to expected argument type 'NetworkError'
         do {
-            let token = try await requestManager.load(AuthTokenRequest()).token
+            let token = try await networkManager.load(authRequest)
             return .success(token)
         } catch {
             return .failure(error)
         }
+    }
+    
+    func getTokenString() async throws(NetworkError) -> String {
+        try await getToken().token
+    }
+    
+    func getTokenString(fetchBeforeExpiry: Bool) async throws(NetworkError) -> String {
+        try await getToken(fetchBeforeExpiry: fetchBeforeExpiry).token
+    }
+}
+
+class PetFinderAuthManager: AuthManager<OAuthToken> { 
+    convenience init(networkManager: NetworkManager) {
+        self.init(networkManager: networkManager, authRequest: AuthTokenRequest())
     }
 }

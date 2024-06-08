@@ -55,9 +55,13 @@ extension HTTPURLResponse {
     }
 }
 class MockNetworkSession: NetworkSession {
-    var getData: (URLRequest) -> (Data, URLResponse) = { _ in
+    var getData: (URLRequest) -> (Data, URLResponse)
+    
+    init(getData: @escaping (URLRequest) -> (Data, URLResponse) = { _ in
         (data: "{}".data(using: .utf8) ?? Data(),
          response: HTTPURLResponse.mocked(statusCode: 200))
+    }) {
+        self.getData = getData
     }
     
     func data(
@@ -66,6 +70,7 @@ class MockNetworkSession: NetworkSession {
     ) async throws -> (Data, URLResponse) {
         getData(req)
     }
+    
     func data(for request: URLRequest) async throws -> (Data, URLResponse) {
         try await data(for: request, delegate: nil)
     }

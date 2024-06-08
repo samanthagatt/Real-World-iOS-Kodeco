@@ -33,7 +33,7 @@
 import Foundation
 
 struct AuthTokenRequest: PetFinderNetworkRequest {
-    typealias ReturnType = AuthToken
+    typealias ReturnType = OAuthToken
     let path: String = "/oauth2/token"
     let params: [String: Any] = [
         "grant_type": PetFinderAPIConstants.grantType,
@@ -42,5 +42,5 @@ struct AuthTokenRequest: PetFinderNetworkRequest {
     ]
     let requestType: RequestMethod = .post
     let requiresAuth: Bool = false
-    let responseDecoder: any ResponseDecoder<AuthToken> = JSONResponseDecoder(.convertFromSnakeCase)
+    let responseDecoder: any ResponseDecoder<OAuthToken> = JSONResponseDecoder(.convertFromSnakeCase)
 }

@@ -43,7 +43,10 @@ struct JSONEncodableBody: RequestBody {
     let encodable: Encodable
     let encoder: JSONEncoder
     
-    init(from encodable: Encodable, using encoder: JSONEncoder = JSONEncoder()) {
+    init(
+        from encodable: Encodable,
+        using encoder: JSONEncoder = JSONEncoder.shared
+    ) {
         self.encodable = encodable
         self.encoder = encoder
     }
